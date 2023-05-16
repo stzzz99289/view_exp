@@ -1,5 +1,13 @@
 % run single trail
 
+% randomly shuffle letters before each trail
+display_indices = randperm(len, norep_len);
+for i = (norep_len+1):max_stimu_num
+    choice_indices = setdiff(all_indices, display_indices(i-norep_len:i-1));
+    display_indices(i) = choice_indices(randi([1, len-norep_len], 1));
+end
+display_letters = letter_lst(display_indices);
+
 % display gaze point
 bbox = Screen('TextBounds', wptr, '+');
 for i = 1:gaze_frames
@@ -18,7 +26,11 @@ for i = 1:max_stimu_num
         disp_color = black_color;
     end
 
-    posx = wrect(3)/2;
+    if i == p2
+        posx = wrect(3)/2 + (display_angle/view_angle)*wrect(3);
+    else
+        posx = wrect(3)/2;
+    end
     posy = wrect(4)/2;
     bbox = Screen('TextBounds', wptr, display_letters(i));
     Screen('DrawText', wptr, display_letters(i), posx-bbox(3)/2, ...
@@ -29,6 +41,7 @@ end
 % display query 1
 Screen('DrawTexture', wptr, query1_img, []);
 Screen('Flip', wptr);
+tic;
 
 % press keys to continue
 while 1
@@ -44,11 +57,14 @@ while 1
         break;
     end
 end
-exp_data(current_datarow, 3) = cellstr(pressed_letter1);
+respondtime = toc;
+exp_data(current_datarow, 10) = num2cell(respondtime);
+exp_data(current_datarow, 4) = cellstr(pressed_letter1);
 
 % display query 2
 Screen('DrawTexture', wptr, query2_img, []);
 Screen('Flip', wptr);
+tic;
 
 % press keys to continue
 while 1
@@ -64,7 +80,9 @@ while 1
         break;
     end
 end
-exp_data(current_datarow, 5) = cellstr(pressed_letter2);
+respondtime = toc;
+exp_data(current_datarow, 11) = num2cell(respondtime);
+exp_data(current_datarow, 6) = cellstr(pressed_letter2);
 
 trail_count = trail_count + 1;
 if mod(trail_count, 39)==0

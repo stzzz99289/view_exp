@@ -7,9 +7,6 @@ clear;
 clc;
 sca;
 
-% define screen id
-screenid = 0;
-
 % trail params
 gaze_time = 12 / 60;
 stimu_time = 6 / 60;
@@ -40,16 +37,11 @@ for i = 1:length(letter_lst)
 end
 
 % define screen info
-screen_lst = [0]; % same order as in windows display settings
-screen_num = 1;
-first_id = screen_lst(1);
+screenid = 0;
 width = 1920;
-total_width = width*screen_num;
 height = 1080;
-% wrect = [0 0 total_width height]; % assume all displays are the same
-view_angle = 26; % view angle of single display (in degrees)
-total_angle = view_angle*screen_num / 2;
-radius = 30; % radius of letter in pixels
+view_angle = 196.5; % view angle of window in degrees
+display_angle = 0; % current letter display angle
 
 % define some color rgb values
 black_color = [0 0 0];
@@ -58,33 +50,37 @@ green_color = [0 255 0];
 gray_color = [128 128 128];
 
 % letters lag and pos params
-exp_type = 1;
+exp_type = 2;
 if exp_type == 1
     offset_lst = [0 1 2 3 4 5 6 7 8];
     angle_lst = [0];
+    total_block_num = 2;
+    t1_len = 13;
+    t2_len = length(offset_lst);
+    data_row_num = total_block_num*(t1_len*t2_len)+1;
 elseif exp_type == 2
-    offset_lst = [1 2 4 8];
-    angle_lst = [-10 -5 0 5 10];
-elseif exp_type == 3
-    offset_lst = [1 2 4 8];
-    angle_lst = [-20 -15 -10 10 15 20];
-elseif exp_type == 4
-    offset_lst = [1 2 4 8];
-    angle_lst = [-30 -25 -20 20 25 30];
+    offset_lst = [0 1 2 4 8];
+    angle_lst = [-30 -25 -20 -15 -10 -5 0 5 10 15 20 25 30];
+    total_block_num = 10;
+    t1_len = 13;
+    t2_len = length(offset_lst);
+    angle_len = length(angle_lst);
+    data_row_num = total_block_num*(2*t2_len*angle_len)+1;
 end
-t1_len = 13;
-t2_len = length(offset_lst);
 t1_pos = randperm(t1_len)+5;
+angle_pos = angle_lst(randperm(angle_len));
 p1 = 10;
 p2 = 15;
 
 % initialize experiment data
-exp_data = cell(t1_len*t2_len+1, 8);
+data_column_num = 11;
+exp_data = cell(data_row_num, data_column_num);
 current_datarow = 1;
-exp_data(current_datarow, :) = {'trail_index', 'GroundTruth1', 'Result1', ...
-    'GrounTruth2', 'Result2', 'lag', 'Correct1', 'Correct2'};
-current_datarow = current_datarow + 1;
 
+% write data header
+exp_data(current_datarow, :) = {'BlockIndex', 'TrailIndex', 'GroundTruth1', 'Result1', ...
+    'GrounTruth2', 'Result2', 'lag', 'Correct1', 'Correct2', 'RespondTime1', 'RespondTime2'};
+current_datarow = current_datarow + 1;
 
 % perform experiment
 try
@@ -93,9 +89,16 @@ try
     run("scripts/get_info.m");
 
     % Open a grey backgound window
-    [wptr, wrect] = Screen('OpenWindow', screenid, gray_color, ...
-        [width 0 width*2 height]);
-    [center_x, center_y] = RectCenter(wrect);
+    development = true;
+    if development
+        [wptr, wrect] = Screen('OpenWindow', screenid, gray_color, ...
+             [width 0 width*2 height]);
+        [center_x, center_y] = RectCenter(wrect);
+    else
+        [wptr, wrect] = Screen('OpenWindow', screenid, gray_color, ...
+            [0 0 width height]);
+        [center_x, center_y] = RectCenter(wrect); 
+    end
 
     % Preparation for querys
     query1_img = Screen('MakeTexture', wptr, imread('./pictures/query3.tiff'));
@@ -114,19 +117,16 @@ try
     % experiment preparation
     % HideCursor;
 
-    % set letters and run welcome
-    display_indices = randperm(len, norep_len);
-    for i = (norep_len+1):max_stimu_num
-        choice_indices = setdiff(all_indices, display_indices(i-norep_len:i-1));
-        display_indices(i) = choice_indices(randi([1, len-norep_len], 1));
-    end
-    display_letters = letter_lst(display_indices);
+    % run welcome
     run("scripts/welcome.m");
 
-    % run 2 blocks
-    for block_num = 1:2
+    % run blocks
+    for block_num = 1:total_block_num
         run('scripts/run_block.m');
     end
+
+    % save exp data
+    run('scripts/save_data.m');
 
     ShowCursor;
     sca;

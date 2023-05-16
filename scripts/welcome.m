@@ -15,7 +15,15 @@ end
 % start one trail
 end_trail = false;
 while 1
-    run("run_trail.m");
+    for practice_num = 1:10
+        if exp_type == 1
+            display_angle = 0;
+        elseif exp_type == 2
+            display_angle = angle_pos(practice_num);
+        end
+        
+        run("run_trail.m");
+    end
     
     % display second welcome instruction
     Screen('DrawTexture', wptr, exp_instruction2, []);
@@ -31,6 +39,8 @@ while 1
             break;
         end
     end
+
+    % end practice or re-practice
     if end_trail
         break;
     else
