@@ -85,7 +85,7 @@ exp_data(current_datarow, 11) = num2cell(respondtime);
 exp_data(current_datarow, 6) = cellstr(pressed_letter2);
 
 trail_count = trail_count + 1;
-if mod(trail_count, 39)==0
+if mod(trail_count, rest_trails)==0
     % display rest query
     Screen('DrawTexture', wptr, rest_img, []);
     Screen('Flip', wptr);

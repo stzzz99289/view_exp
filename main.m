@@ -49,23 +49,32 @@ white_color = [255 255 255];
 green_color = [0 255 0];
 gray_color = [128 128 128];
 
-% letters lag and pos params
+% set experiment specific params
 exp_type = 2;
 if exp_type == 1
-    offset_lst = [0 1 2 3 4 5 6 7 8];
+    offset_lst = [1 2 3 4 5 6 7 8];  % possible values of lag between T1 and T2
     angle_lst = [0];
     total_block_num = 2;
+    rest_trails = 39;
     t1_len = 13;
     t2_len = length(offset_lst);
     data_row_num = total_block_num*(t1_len*t2_len)+1;
+
+    welcome_img = Screen('MakeTexture', wptr, imread('./pictures/exp1_welcome.tiff'));
+    welcome_end_img = Screen('MakeTexture', wptr, imread('./pictures/exp1_welcome_end.tiff'));
+
 elseif exp_type == 2
-    offset_lst = [0 1 2 4 8];
+    offset_lst = [1 2 4 8];  % possible values of lag between T1 and T2
     angle_lst = [-30 -25 -20 -15 -10 -5 0 5 10 15 20 25 30];
     total_block_num = 10;
+    rest_trails = 130;
     t1_len = 13;
     t2_len = length(offset_lst);
     angle_len = length(angle_lst);
     data_row_num = total_block_num*(2*t2_len*angle_len)+1;
+
+    welcome_img = Screen('MakeTexture', wptr, imread('./pictures/exp2_welcome.tiff'));
+    welcome_end_img = Screen('MakeTexture', wptr, imread('./pictures/exp2_welcome_end.tiff'));
 end
 t1_pos = randperm(t1_len)+5;
 angle_pos = angle_lst(randperm(angle_len));
@@ -100,11 +109,9 @@ try
         [center_x, center_y] = RectCenter(wrect); 
     end
 
-    % Preparation for querys
-    query1_img = Screen('MakeTexture', wptr, imread('./pictures/query3.tiff'));
-    query2_img = Screen('MakeTexture', wptr, imread('./pictures/query4.tiff'));
-    exp_instruction1 = Screen('MakeTexture', wptr, imread('./pictures/query1.tiff'));
-    exp_instruction2 = Screen('MakeTexture', wptr, imread('./pictures/query2.tiff'));
+    % Preparation for query images
+    query1_img = Screen('MakeTexture', wptr, imread('./pictures/letter_query1.tiff'));
+    query2_img = Screen('MakeTexture', wptr, imread('./pictures/letter_query2.tiff'));
     rest_img = Screen('MakeTexture', wptr, imread('./pictures/query5.tiff'));
 
     % set and get some screen parameters

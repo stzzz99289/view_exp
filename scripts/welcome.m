@@ -1,7 +1,7 @@
 % show welcome message
 
 % display first welcome instruction
-Screen('DrawTexture', wptr, exp_instruction1, []);
+Screen('DrawTexture', wptr, welcome_img, []);
 Screen('Flip', wptr);
 
 % press space to continue
@@ -26,7 +26,7 @@ while 1
     end
     
     % display second welcome instruction
-    Screen('DrawTexture', wptr, exp_instruction2, []);
+    Screen('DrawTexture', wptr, welcome_end_img, []);
     Screen('Flip', wptr);
 
     % press q or p to continue or re-practice
