@@ -32,6 +32,7 @@ if exp_type == 1
             correct2 = (display_letter2(1) == pressed_letter2(1));
             exp_data(current_datarow, 8) = num2cell(logical(sum(correct1)));
             exp_data(current_datarow, 9) = num2cell(logical(sum(correct2)));
+            exp_data(current_datarow, 12) = num2cell(display_angle);
             current_datarow = current_datarow + 1;
         end
     end
@@ -71,6 +72,7 @@ elseif exp_type == 2
             correct2 = (display_letter2(1) == pressed_letter2(1));
             exp_data(current_datarow, 8) = num2cell(logical(sum(correct1)));
             exp_data(current_datarow, 9) = num2cell(logical(sum(correct2)));
+            exp_data(current_datarow, 12) = num2cell(display_angle);
             current_datarow = current_datarow + 1;
         end
     end

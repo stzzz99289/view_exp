@@ -92,7 +92,7 @@ if exp_type == 1
     offset_lst = [1 2 3 4 5 6 7 8];  % possible values of lag between T1 and T2
     angle_lst = [0];
     total_block_num = 2;
-    rest_trails = 26;
+    rest_trails = 104;
     t1_len = 13;
     t2_len = length(offset_lst);
     angle_len = length(angle_lst);
@@ -120,18 +120,21 @@ p1 = 10;
 p2 = 15;
 
 % initialize experiment data
-data_column_num = 11;
+data_column_num = 12;
 exp_data = cell(data_row_num, data_column_num);
 current_datarow = 1;
 
 % write data header
 exp_data(current_datarow, :) = {'BlockIndex', 'TrailIndex', 'GroundTruth1', 'Result1', ...
-    'GrounTruth2', 'Result2', 'lag', 'Correct1', 'Correct2', 'RespondTime1', 'RespondTime2'};
+    'GrounTruth2', 'Result2', 'lag', 'Correct1', 'Correct2', 'RespondTime1', 'RespondTime2', 'OffsetAngle'};
 current_datarow = current_datarow + 1;
 
 % perform experiment
 try
-    % HideCursor;
+    % when performing experiment, hide the cursor
+    if ~development
+        HideCursor;
+    end
 
     % run welcome
     practicing = true;
