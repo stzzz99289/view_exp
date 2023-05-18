@@ -43,7 +43,7 @@ Screen('DrawTexture', wptr, query1_img, []);
 Screen('Flip', wptr);
 tic;
 
-% press keys to continue
+% press some key to continue
 while 1
     [secs, keycode, deltasecs] = KbPressWait;
     if keycode(space_key)
@@ -61,12 +61,32 @@ respondtime = toc;
 exp_data(current_datarow, 10) = num2cell(respondtime);
 exp_data(current_datarow, 4) = cellstr(pressed_letter1);
 
+% if practicing, display right or wrong
+if practicing
+    display_letter1 = display_letters(p1);
+    correct1 = (display_letter1(1) == pressed_letter1(1));
+
+    if correct1
+        bbox = Screen('TextBounds', wptr, 'correct');
+        Screen('DrawText', wptr, 'correct', posx-bbox(3)/2, ...
+            posy-bbox(4)/2, green_color);
+        Screen('Flip', wptr);
+    else
+        bbox = Screen('TextBounds', wptr, 'wrong');
+        Screen('DrawText', wptr, 'wrong', posx-bbox(3)/2, ...
+            posy-bbox(4)/2, red_color);
+        Screen('Flip', wptr);
+    end
+
+    WaitSecs(1);
+end
+
 % display query 2
 Screen('DrawTexture', wptr, query2_img, []);
 Screen('Flip', wptr);
 tic;
 
-% press keys to continue
+% press some key to continue
 while 1
     [secs, keycode, deltasecs] = KbPressWait;
     if keycode(space_key)
@@ -83,6 +103,26 @@ end
 respondtime = toc;
 exp_data(current_datarow, 11) = num2cell(respondtime);
 exp_data(current_datarow, 6) = cellstr(pressed_letter2);
+
+% if practicing, display right or wrong
+if practicing
+    display_letter2 = display_letters(p2);
+    correct2 = (display_letter2(1) == pressed_letter2(1));
+
+    if correct2
+        bbox = Screen('TextBounds', wptr, 'correct');
+        Screen('DrawText', wptr, 'correct', posx-bbox(3)/2, ...
+            posy-bbox(4)/2, green_color);
+        Screen('Flip', wptr);
+    else
+        bbox = Screen('TextBounds', wptr, 'wrong');
+        Screen('DrawText', wptr, 'wrong', posx-bbox(3)/2, ...
+            posy-bbox(4)/2, red_color);
+        Screen('Flip', wptr);
+    end
+
+    WaitSecs(1);
+end
 
 trail_count = trail_count + 1;
 if mod(trail_count, rest_trails)==0

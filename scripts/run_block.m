@@ -9,7 +9,8 @@ if exp_type == 1
             else
                 p1 = t1_pos(p1i);
             end
-            p2 = p1 + t2_offset(p2i);
+            lag = t2_offset(p2i);
+            p2 = p1 + lag;
             
             % run trail
             display_angle = 0;
@@ -26,7 +27,7 @@ if exp_type == 1
                 display_letter2 = display_letters(p2);
             end
             exp_data(current_datarow, 5) = cellstr(display_letter2);
-            exp_data(current_datarow, 7) = num2cell(t2_offset(p2i));
+            exp_data(current_datarow, 7) = num2cell(lag);
             correct1 = (display_letter1(1) == pressed_letter1(1));
             correct2 = (display_letter2(1) == pressed_letter2(1));
             exp_data(current_datarow, 8) = num2cell(logical(sum(correct1)));
@@ -45,7 +46,8 @@ elseif exp_type == 2
         for j=1:t2_len*angle_len
             % set posision of 1st and 2nd letter
             p1 = t1_pos(randi(t1_len));
-            p2 = p1 + offset_angle_pairs(j, 1);
+            lag = offset_angle_pairs(j, 1);
+            p2 = p1 + lag;
 
             % set offset angle of 2nd letter
             display_angle = offset_angle_pairs(j, 2);
@@ -64,7 +66,7 @@ elseif exp_type == 2
                 display_letter2 = display_letters(p2);
             end
             exp_data(current_datarow, 5) = cellstr(display_letter2);
-            exp_data(current_datarow, 7) = num2cell(t2_offset(p2i));
+            exp_data(current_datarow, 7) = num2cell(lag);
             correct1 = (display_letter1(1) == pressed_letter1(1));
             correct2 = (display_letter2(1) == pressed_letter2(1));
             exp_data(current_datarow, 8) = num2cell(logical(sum(correct1)));
